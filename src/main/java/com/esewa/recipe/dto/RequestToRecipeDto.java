@@ -1,18 +1,14 @@
 package com.esewa.recipe.dto;
 
 import com.esewa.user.entity.User;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 
-@Getter
-@Setter
-public class RequestRecipe {
+public class RequestToRecipeDto {
     private String title;
     private String image;
     private String description;
     private boolean vegetarian;
-    private User user;
+    private ConvertUserDtoForRecipe user;
     private List<Integer> likes;
 }

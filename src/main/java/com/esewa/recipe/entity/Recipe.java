@@ -14,6 +14,9 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "recipe_details")
 public class Recipe extends AbstractEntity {
     private String title;

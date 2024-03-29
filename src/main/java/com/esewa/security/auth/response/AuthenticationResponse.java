@@ -1,7 +1,6 @@
 package com.esewa.security.auth.response;
 
 import lombok.*;
-
 @Getter
 @Setter
 @Builder

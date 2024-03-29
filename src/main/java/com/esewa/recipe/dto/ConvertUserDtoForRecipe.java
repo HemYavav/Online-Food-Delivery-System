@@ -11,4 +11,6 @@ public class ConvertUserDtoForRecipe {
     private String username;
     private String email;
     private Status status;
+    private String address;
+    private String gender;
 }

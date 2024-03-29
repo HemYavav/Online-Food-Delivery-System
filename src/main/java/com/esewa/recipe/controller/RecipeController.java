@@ -22,7 +22,6 @@ import java.util.List;
 public class RecipeController {
     private final UserService userService;
     private final RecipeService recipeService;
-    private final ModelMapper modelMapper;
 
     @PostMapping(EndpointConstants.API_CREATE_BY_USER_ID)
     public Recipe createRecipe(@RequestBody Recipe recipe, @PathVariable int userId) throws UserNotFoundException, RecipeAlreadyFoundByUserEmail, UserAlreadyDeletedException, RecipeNotFoundException {
@@ -48,6 +47,4 @@ public class RecipeController {
     public Recipe likesRecipe(@PathVariable int id, @PathVariable int userId) throws UserNotFoundException, UserAlreadyDeletedException, RecipeNotExistException {
         return recipeService.likeRecipe(id, userService.findUserById(userId));
     }
-
-
 }

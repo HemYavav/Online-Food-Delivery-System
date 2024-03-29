@@ -16,7 +16,6 @@ public interface UserService {
     AuthenticationResponse registerUser(UserRequestDto userDto) throws UserAlreadyRegisteredException;
     AuthenticationResponse authenticateUser(AuthenticationRequest authenticationRequest) throws UserNotFoundException, UsernamePasswordNotMatchException;
 
-
     String deleteUserById(int id) throws UserNotFoundException, UserAlreadyDeletedException;
 
     List<UserResponseDto> getAllUserList();

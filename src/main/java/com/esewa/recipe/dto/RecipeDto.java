@@ -1,10 +1,14 @@
 package com.esewa.recipe.dto;
 
-import com.esewa.user.entity.User;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-public class RequestToRecipeDto {
+
+@Setter
+@Getter
+public class RecipeDto {
     private String title;
     private String image;
     private String description;

@@ -1,5 +1,6 @@
 package com.esewa.recipe.repository;
 
+import com.esewa.recipe.dto.ResponseToRecipeDto;
 import com.esewa.recipe.entity.Recipe;
 import org.springframework.data.jpa.repository.JpaRepository;
 

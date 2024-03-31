@@ -1,11 +1,10 @@
 package com.esewa.recipe.entity;
 
 import com.esewa.shared.abstractcollection.AbstractEntity;
+import com.esewa.shared.enumcollection.Status;
 import com.esewa.user.entity.User;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -27,6 +26,9 @@ public class Recipe extends AbstractEntity {
     private User user;
     @ElementCollection
     private List<Integer> likes = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
 
 
 }

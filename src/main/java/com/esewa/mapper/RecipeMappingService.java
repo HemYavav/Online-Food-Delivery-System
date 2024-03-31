@@ -1,7 +1,7 @@
 package com.esewa.mapper;
 
 import com.esewa.recipe.dto.ConvertUserDtoForRecipe;
-import com.esewa.recipe.dto.RequestToRecipeDto;
+import com.esewa.recipe.dto.RecipeDto;
 import com.esewa.recipe.dto.ResponseToRecipeDto;
 import com.esewa.recipe.entity.Recipe;
 import com.esewa.user.entity.User;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class RecipeMappingService {
     private final ModelMapper modelMapper;
 
-    public Recipe mappedRecipeDtoToRecipe(RequestToRecipeDto requestToRecipeDto) {
+    public Recipe mappedRecipeDtoToRecipe(RecipeDto requestToRecipeDto) {
         log.warn("Assigning RecipeDto entity info to Recipe type");
         return modelMapper.map(requestToRecipeDto, Recipe.class);
     }

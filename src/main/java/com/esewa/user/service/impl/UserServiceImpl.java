@@ -4,6 +4,7 @@ import com.esewa.mapper.UserMappingService;
 import com.esewa.security.auth.request.AuthenticationRequest;
 import com.esewa.security.auth.response.AuthenticationResponse;
 import com.esewa.security.config.service.JwtService;
+import com.esewa.security.config.utils.JwtProvider;
 import com.esewa.shared.LastModifiedDate;
 import com.esewa.shared.enumcollection.Role;
 import com.esewa.shared.enumcollection.Status;
@@ -18,6 +19,7 @@ import com.esewa.user.entity.User;
 import com.esewa.user.repository.UserRepository;
 import com.esewa.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -35,6 +38,7 @@ public class UserServiceImpl implements UserService {
     private final AuthenticationManager authenticationManager;
     private final UserMappingService userMappingService;
     private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
 
     @Override
     public AuthenticationResponse registerUser(UserRequestDto userRequestDto) throws UserAlreadyRegisteredException {
@@ -52,7 +56,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AuthenticationResponse authenticateUser(AuthenticationRequest authenticationRequest) throws UserNotFoundException, UsernamePasswordNotMatchException {
-        Optional<User> isUserExisted = userRepository.findUsersByEmail(authenticationRequest.getEmail());
+        Optional<User> isUserExisted = userRepository.findByEmail(authenticationRequest.getEmail());
         if (isUserExisted.isEmpty()) {
             throw new UserNotFoundException();
         }
@@ -118,5 +122,21 @@ public class UserServiceImpl implements UserService {
         user.setStatus(Status.ACTIVE);
         user.setLastModifiedDate(LastModifiedDate.getLastModifiedDate());
         return userRepository.save(user);
+    }
+
+    @Override
+    public UserResponseDto findUserByJwt(String jwt) throws Exception, UserNotFoundException {
+        log.error("JWT Token: "+jwt);
+        String email = jwtProvider.getEmailFromJwtToken(jwt);
+        log.warn("your email: "+email);
+        if (email==null){
+            throw new Exception("Invalid Jwt Token...");
+        }
+        Optional<UserResponseDto> user = userRepository.findUserByEmail(email);
+        if (user.isEmpty()){
+            throw new UserNotFoundException();
+        }
+//        return extractedUser.get();
+        return null;
     }
 }

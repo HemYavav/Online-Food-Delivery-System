@@ -1,6 +1,8 @@
 package com.esewa.recipe.controller;
 
 import com.esewa.recipe.dto.ConvertUserDtoForRecipe;
+import com.esewa.recipe.dto.RecipeDto;
+import com.esewa.recipe.dto.ResponseToRecipeDto;
 import com.esewa.recipe.entity.Recipe;
 import com.esewa.recipe.service.RecipeService;
 import com.esewa.shared.endpoint.EndpointConstants;
@@ -9,6 +11,7 @@ import com.esewa.shared.exception.exceptionhandler.RecipeNotExistException;
 import com.esewa.shared.exception.exceptionhandler.RecipeNotFoundException;
 import com.esewa.shared.exception.exceptionhandler.exceptioncollection.UserAlreadyDeletedException;
 import com.esewa.shared.exception.exceptionhandler.exceptioncollection.UserNotFoundException;
+import com.esewa.user.entity.User;
 import com.esewa.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -20,12 +23,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping(EndpointConstants.API_RECIPE)
 public class RecipeController {
-    private final UserService userService;
     private final RecipeService recipeService;
+    private final UserService userService;
 
     @PostMapping(EndpointConstants.API_CREATE_BY_USER_ID)
-    public Recipe createRecipe(@RequestBody Recipe recipe, @PathVariable int userId) throws UserNotFoundException, RecipeAlreadyFoundByUserEmail, UserAlreadyDeletedException, RecipeNotFoundException {
-        return recipeService.createRecipe(recipe, userService.findUserById(userId));
+    public ResponseToRecipeDto createRecipe(@RequestBody RecipeDto recipeDto, @PathVariable int userId) throws UserNotFoundException, RecipeAlreadyFoundByUserEmail, UserAlreadyDeletedException, RecipeNotFoundException {
+        return recipeService.createRecipe(recipeDto, userId);
     }
 
     @PostMapping(EndpointConstants.API_UPDATED_BY_USER_ID)

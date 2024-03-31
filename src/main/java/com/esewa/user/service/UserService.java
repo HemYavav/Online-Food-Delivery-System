@@ -25,4 +25,6 @@ public interface UserService {
     User updateUserById(int id);
 
     User recreateDeletedUserByUserId(int id) throws UserAlreadyRegisteredException, UserNotFoundException;
+
+    public UserResponseDto findUserByJwt(String jwt) throws Exception, UserNotFoundException;
 }

@@ -1,14 +1,23 @@
 package com.esewa.recipe.service.impl;
 
+import com.esewa.mapper.RecipeMappingService;
+import com.esewa.mapper.UserMappingService;
+import com.esewa.recipe.dto.RecipeDto;
+import com.esewa.recipe.dto.ResponseToRecipeDto;
 import com.esewa.recipe.entity.Recipe;
 import com.esewa.recipe.repository.RecipeRepository;
 import com.esewa.recipe.service.RecipeService;
 import com.esewa.shared.LastModifiedDate;
+import com.esewa.shared.enumcollection.Status;
 import com.esewa.shared.exception.exceptionhandler.RecipeAlreadyFoundByUserEmail;
 import com.esewa.shared.exception.exceptionhandler.RecipeNotExistException;
 import com.esewa.shared.exception.exceptionhandler.RecipeNotFoundException;
+import com.esewa.shared.exception.exceptionhandler.exceptioncollection.UserAlreadyDeletedException;
+import com.esewa.shared.exception.exceptionhandler.exceptioncollection.UserNotFoundException;
 import com.esewa.shared.message.MessageConstants;
+import com.esewa.user.dto.UserResponseDto;
 import com.esewa.user.entity.User;
+import com.esewa.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,21 +30,24 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RecipeServiceImpl implements RecipeService {
     private final RecipeRepository recipeRepository;
+    private final RecipeMappingService recipeMappingService;
+    private final UserService userService;
+    private final UserMappingService userMappingService;
+
 
     @Override
-    public Recipe createRecipe(Recipe recipe, User user) throws RecipeAlreadyFoundByUserEmail {
+    public ResponseToRecipeDto createRecipe(RecipeDto recipeDto, int userId) throws RecipeAlreadyFoundByUserEmail, UserNotFoundException, UserAlreadyDeletedException {
 
-        Optional<Recipe> isRecipeExistedByUSerEmail = recipeRepository.findByTitleAndUserEmail(recipe.getTitle(), user.getEmail());
-
+User user = userService.findUserById(userId);
+        Optional<Recipe> isRecipeExistedByUSerEmail = recipeRepository.findByTitleAndUserEmail(recipeDto.getTitle(), user.getEmail());
         if (isRecipeExistedByUSerEmail.isPresent()) {
             throw new RecipeAlreadyFoundByUserEmail();
         }
-        Recipe createdRecipe = new Recipe();
-        createdRecipe.setTitle(recipe.getTitle());
-        createdRecipe.setImage(recipe.getImage());
+
+        Recipe createdRecipe = recipeMappingService.mappedRecipeDtoToRecipe(recipeDto);
+        createdRecipe.setStatus(Status.ACTIVE);
         createdRecipe.setUser(user);
-        createdRecipe.setDescription(recipe.getDescription());
-        return createdRecipe;
+        return recipeMappingService.mappedRecipeToRecipeDto(recipeRepository.save(createdRecipe));
     }
 
 

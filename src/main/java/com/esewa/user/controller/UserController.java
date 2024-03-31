@@ -32,7 +32,6 @@ public class UserController {
         return userService.authenticateUser(authenticationRequest);
     }
 
-
     @GetMapping(EndpointConstants.GET_ALL)
     public List<UserResponseDto> getAllUsers() {
         return userService.getAllUserList();
@@ -43,7 +42,6 @@ public class UserController {
         return userService.findUserById(id);
     }
 
-
     @DeleteMapping(EndpointConstants.DELETE_BY_ID)
     public String deleteUserById(@PathVariable int id) throws UserNotFoundException, UserAlreadyDeletedException {
         return userService.deleteUserById(id);
@@ -52,6 +50,12 @@ public class UserController {
     @PostMapping(EndpointConstants.RECREATED_DELETED_USER_BY_ID)
     public User recreateDeleteUserById(@PathVariable int id) throws UserNotFoundException, UserAlreadyRegisteredException {
         return userService.recreateDeletedUserByUserId(id);
+    }
+
+    @GetMapping(EndpointConstants.USER_PROFILE_WITH_JWT)
+    public UserResponseDto findUserByJwt(@RequestHeader("Authorization") String jwt) throws UserNotFoundException, Exception {
+        return userService.findUserByJwt(jwt);
+
     }
 
 }

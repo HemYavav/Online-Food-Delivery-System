@@ -4,7 +4,6 @@ public class EndpointConstants {
 
     //user
     public static final String USER_BASE_URL="/api/user";
-    public static final String GET_USER_BY_ID=USER_BASE_URL+"/api/user";
 
 
     public static final String AUTH_BASE_URL = "/api/auth";
@@ -84,4 +83,5 @@ public class EndpointConstants {
     public static final String API_UPDATED_BY_USER_ID = "/updated-by-user/{userId}";
     public static final String API_LIKE_RECIPE_BY_USER = "/like-recipe/{id}/by-user/{userId}";
     public static final String API_FOR_USERS = "/api/for-all-users";
+    public static final String USER_PROFILE_WITH_JWT = "/profile";
 }

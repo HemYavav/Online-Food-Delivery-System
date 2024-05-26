@@ -3,6 +3,7 @@ package com.esewa.user.service;
 import com.esewa.security.auth.request.AuthenticationRequest;
 import com.esewa.security.auth.response.AuthenticationResponse;
 import com.esewa.shared.exception.exceptionhandler.UsernamePasswordNotMatchException;
+import com.esewa.shared.exception.exceptionhandler.exceptioncollection.EmailNotFoundException;
 import com.esewa.shared.exception.exceptionhandler.exceptioncollection.UserAlreadyDeletedException;
 import com.esewa.shared.exception.exceptionhandler.exceptioncollection.UserAlreadyRegisteredException;
 import com.esewa.shared.exception.exceptionhandler.exceptioncollection.UserNotFoundException;
@@ -26,4 +27,5 @@ public interface UserService {
     User updateUserById(int id);
 
     User recreateDeletedUserByUserId(int id) throws UserAlreadyRegisteredException, UserNotFoundException;
+    User getUserDetailFromJwtToken(String token) throws Exception, UserNotFoundException, UserAlreadyDeletedException, EmailNotFoundException;
 }

@@ -4,10 +4,12 @@ import com.esewa.mapper.UserMappingService;
 import com.esewa.security.auth.request.AuthenticationRequest;
 import com.esewa.security.auth.response.AuthenticationResponse;
 import com.esewa.security.config.service.JwtService;
+import com.esewa.security.config.utils.JwtProvider;
 import com.esewa.shared.LastModifiedDate;
 import com.esewa.shared.enumcollection.Role;
 import com.esewa.shared.enumcollection.Status;
 import com.esewa.shared.exception.exceptionhandler.UsernamePasswordNotMatchException;
+import com.esewa.shared.exception.exceptionhandler.exceptioncollection.EmailNotFoundException;
 import com.esewa.shared.exception.exceptionhandler.exceptioncollection.UserAlreadyDeletedException;
 import com.esewa.shared.exception.exceptionhandler.exceptioncollection.UserAlreadyRegisteredException;
 import com.esewa.shared.exception.exceptionhandler.exceptioncollection.UserNotFoundException;
@@ -18,6 +20,8 @@ import com.esewa.user.entity.User;
 import com.esewa.user.repository.UserRepository;
 import com.esewa.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,11 +34,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final UserMappingService userMappingService;
     private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
+
 
     @Override
     public AuthenticationResponse registerUser(UserRequestDto userRequestDto) throws UserAlreadyRegisteredException {
@@ -119,4 +126,26 @@ public class UserServiceImpl implements UserService {
         user.setLastModifiedDate(LastModifiedDate.getLastModifiedDate());
         return userRepository.save(user);
     }
+
+
+    @Override
+    public User getUserDetailFromJwtToken(String token) throws Exception, UserNotFoundException, UserAlreadyDeletedException, EmailNotFoundException {
+        if (token == null) {
+            log.error("Token is null");
+            throw new Exception("token is null");
+        }
+        log.info("Token is : {}", token);
+        String username = jwtService.extractUsername(token.substring(7));
+        log.info("Username is : {}", username);
+        System.out.println(username);
+
+        Optional<User> isUserExisted = userRepository.findByEmail(username);
+        if (isUserExisted.isEmpty()) {
+            throw new UserNotFoundException();
+        }
+        return userRepository.findByEmail(username).get();
+
+    }
+
+
 }

@@ -4,6 +4,7 @@ import com.esewa.security.auth.request.AuthenticationRequest;
 import com.esewa.security.auth.response.AuthenticationResponse;
 import com.esewa.shared.endpoint.EndpointConstants;
 import com.esewa.shared.exception.exceptionhandler.UsernamePasswordNotMatchException;
+import com.esewa.shared.exception.exceptionhandler.exceptioncollection.EmailNotFoundException;
 import com.esewa.shared.exception.exceptionhandler.exceptioncollection.UserAlreadyDeletedException;
 import com.esewa.shared.exception.exceptionhandler.exceptioncollection.UserAlreadyRegisteredException;
 import com.esewa.shared.exception.exceptionhandler.exceptioncollection.UserNotFoundException;
@@ -52,6 +53,11 @@ public class UserController {
     @PostMapping(EndpointConstants.RECREATED_DELETED_USER_BY_ID)
     public User recreateDeleteUserById(@PathVariable int id) throws UserNotFoundException, UserAlreadyRegisteredException {
         return userService.recreateDeletedUserByUserId(id);
+    }
+
+    @GetMapping("/get-by-jwt")
+    public User getUserDetailWithJwt(@RequestHeader("Authorization")String jwt) throws Exception, UserNotFoundException, UserAlreadyDeletedException, EmailNotFoundException {
+        return  userService.getUserDetailFromJwtToken(jwt);
     }
 
 }
